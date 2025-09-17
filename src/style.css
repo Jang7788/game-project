@@ -1,0 +1,13 @@
+.nav {
+    align-items: center;
+    text-decoration: none;
+    text-align: center;
+}
+
+.nav ul li {
+    display: inline;
+}
+
+.nav ul {
+    grid-column: 50px;
+}
