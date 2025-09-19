@@ -4,7 +4,7 @@ import { useState } from 'react';
 function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
@@ -14,16 +14,15 @@ function Register() {
       const res = await fetch("http://localhost:5000/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, role }),
+        body: JSON.stringify({ username, email, password } ),
       });
 
       const data = await res.json();
 
       if(res.ok) {
-        setMessage(`สมัครสำเร็จ! User ID: ${data.userId}`);
+        setMessage(`สมัครสำเร็จ! Username: ${data.username}`);
         setUsername("");
         setPassword("");
-        setRole("user"); 
       } else {
         setMessage(`เกิดข้อผิดพลาด: ${data.error}`);
       }
@@ -61,16 +60,15 @@ function Register() {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="role" className="form-label">Role</label>
-          <select
-            id="role"
-            className="form-select"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
+          <label htmlFor="email" className="form-label">Email</label>
+          <input
+            type="email"
+            id="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
 
         <button type="submit" className="btn btn-primary">Register</button>
