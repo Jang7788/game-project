@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo"); // สำหรับเก็บ session ลง MongoDB
-const PORT = 5000;
+const PORT = 3600;
 
 
 const app = express();
