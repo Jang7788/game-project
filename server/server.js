@@ -15,10 +15,7 @@ app.use(cors({
   credentials: true
 }));
 
-mongoose.connect("mongodb://127.0.0.1:27017/auth_demo", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect("mongodb://127.0.0.1:27017/auth_demo");
 
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
@@ -47,11 +44,12 @@ app.post("/api/register", async (req, res) => {
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User({ username, email, password: hash });
     await newUser.save();
-    res.json({ msg: "Registered!" });
+    res.json({ msg: "Registered!", username: newUser.username }); // 👈 ส่งกลับ username ด้วย
   } catch (err) {
     res.status(400).json({ msg: "Error", error: err.message });
   }
 });
+
 
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
@@ -62,8 +60,10 @@ app.post("/api/login", async (req, res) => {
   if (!ok) return res.status(401).json({ msg: "Wrong password" });
 
   req.session.user = { username: user.username, email: user.email };
-  res.json({ msg: "Logged in!" });
+
+  res.json({ msg: "Logged in!", user: req.session.user });
 });
+
 
 app.get("/api/me", (req, res) => {
   if (!req.session.user) return res.status(401).json({ msg: "Not logged in" });

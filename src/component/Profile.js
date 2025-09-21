@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/me", {
+    fetch("http://localhost:3600/api/me", {
       method: "GET",
-      credentials: "include"   // ✅ ส่ง cookie
+      credentials: "include"
     })
       .then(res => {
         if (res.status === 401) {
-          setUser(null);
+          navigate("/login");
           return null;
         }
         return res.json();
@@ -20,11 +22,9 @@ function Profile() {
           setUser(data.user);
         }
       });
-  }, []);
+  }, [navigate]);
 
-  if (!user) {
-    return <p>ยังไม่ได้ล็อกอิน</p>;
-  }
+  if (!user) return null; 
 
   return (
     <div className="container mt-5">
