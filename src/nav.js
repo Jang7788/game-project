@@ -1,27 +1,39 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 
-function Nav (){
-    return (
-        <nav className='navbar navbar-expand-lg navbar-light bg-light'>
-            <ul className='navbar-nav'>
+function Nav() {
+  const { user, setUser, loading } = useContext(UserContext);
 
-                <li className='nav-item'>
-                    <Link to="/" className='nav-link'>Home</Link>
-                </li>
+  const handleLogout = async () => {
+    await fetch("http://localhost:3600/api/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    setUser(null); // ✅ Navbar เปลี่ยนทันที
+  };
 
-                <li className='nav-item'>
-                    <Link to="/login" className='nav-link'>Login</Link>
-                </li>
+  if (loading) return <nav className="navbar bg-light px-3">กำลังโหลด...</nav>;
 
-                <li className='nav-item'>
-                    <Link to="/register" className='nav-link right--1'>Register</Link>
-                </li>
-
-            </ul>
-        </nav>
-    );
+  return (
+    <nav className="navbar bg-light px-3">
+      <Link className="navbar-brand" to="/">MyApp</Link>
+      <Link className="nav" to="/product">Product</Link>
+      <div>
+        {!user ? (
+          <>
+            <Link className="btn btn-outline-primary mx-1" to="/login">Login</Link>
+            <Link className="btn btn-outline-success mx-1" to="/register">Register</Link>
+          </>
+        ) : (
+          <>
+            <span className="mx-2">Hi, {user.username}</span>
+            <button className="btn btn-outline-danger mx-1" onClick={handleLogout}>Logout</button>
+          </>
+        )}
+      </div>
+    </nav>
+  );
 }
 
 export default Nav;

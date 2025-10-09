@@ -7,7 +7,7 @@ function Board() {
     }
     return (
         <div>
-            <button className='btn border-bg-green' onClick={Sum}>{temp}</button>
+            <button className='btn border-bg-green' id='btn' onClick={Sum}>{temp}</button>
             <div className='container'>dajfhadiksfjdikfadjsfkadnfkadfansdgjarnboviawnobvindsaviiehrvjdasnvnaknvodansivornwevjasdjvnaoierhngnvjdasvadnsjkvwev</div>
         </div>
     );

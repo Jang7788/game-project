@@ -1,11 +1,13 @@
 const express = require("express");
 const session = require("express-session");
-const bcrypt = require("bcrypt");
 const cors = require("cors");
-const mongoose = require("mongoose");
+const Login = require("./Routes/login.js");
+const logout = require("./Routes/logout.js");
+const addproduct = require("./Routes/addproduct.js")
+const register = require("./Routes/register.js");
+const me = require("./Routes/me.js")
 const MongoStore = require("connect-mongo"); // สำหรับเก็บ session ลง MongoDB
 const PORT = 3600;
-
 
 const app = express();
 app.use(express.json());
@@ -14,15 +16,6 @@ app.use(cors({
   origin: "http://localhost:3000",
   credentials: true
 }));
-
-mongoose.connect("mongodb://127.0.0.1:27017/auth_demo");
-
-const userSchema = new mongoose.Schema({
-  username: { type: String, unique: true },
-  email: { type: String, unique: true },
-  password: String,
-});
-const User = mongoose.model("User", userSchema);
 
 app.use(
   session({
@@ -38,43 +31,19 @@ app.use(
   })
 );
 
-app.post("/api/register", async (req, res) => {
-  const { username, email, password } = req.body;
-  try {
-    const hash = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hash });
-    await newUser.save();
-    res.json({ msg: "Registered!", username: newUser.username }); // 👈 ส่งกลับ username ด้วย
-  } catch (err) {
-    res.status(400).json({ msg: "Error", error: err.message });
-  }
-});
+//Add product
+app.use("/api/addproduct",addproduct);
 
+//Regiser
+app.use("/api/register",register);
 
-app.post("/api/login", async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
-  if (!user) return res.status(400).json({ msg: "No user" });
+//Login
+app.use("/api/login",Login);
 
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) return res.status(401).json({ msg: "Wrong password" });
+//Me
+app.use("/api/me",me);
 
-  req.session.user = { username: user.username, email: user.email };
-
-  res.json({ msg: "Logged in!", user: req.session.user });
-});
-
-
-app.get("/api/me", (req, res) => {
-  if (!req.session.user) return res.status(401).json({ msg: "Not logged in" });
-  res.json({ user: req.session.user });
-});
-
-app.post("/api/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.clearCookie("connect.sid");
-    res.json({ msg: "Logged out" });
-  });
-});
+//Logout
+app.use("/api/logout",logout);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
