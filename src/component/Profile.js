@@ -1,6 +1,6 @@
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../UserContext"; // ✅ import
+import { UserContext } from "./UserContext"; // ✅ import
 
 function Profile() {
   const { user, setUser } = useContext(UserContext);

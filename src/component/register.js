@@ -1,15 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import { UserContext } from '../UserContext'; // ✅ ใช้ Context (ปรับ path ตามที่วางไฟล์)
+import { UserContext } from './UserContext'; 
 
 function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const { setUser } = useContext(UserContext); // ✅ เพิ่ม
-  const navigate = useNavigate(); // ✅ สำหรับ redirect หลังสมัครเสร็จ
+  const { setUser } = useContext(UserContext); 
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +18,7 @@ function Register() {
       const res = await fetch("http://localhost:3600/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // ✅ ต้องมี เพื่อรับ session cookie
+        credentials: "include", 
         body: JSON.stringify({ username, email, password }),
       });
 
@@ -27,10 +27,8 @@ function Register() {
       if (res.ok && data.username) {
         setMessage(`✅ สมัครสำเร็จ! สวัสดีคุณ ${data.username}`);
 
-        // ✅ ตั้งค่า user ใน context เพื่อให้ Navbar อัปเดตทันที
         setUser({ username: data.username, email });
 
-        // ✅ ไปหน้าโปรไฟล์หลังสมัคร
         navigate("/profile");
 
         setUsername("");

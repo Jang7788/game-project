@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useContext, useState, useRef } from "react"; 
+import { UserContext } from "./UserContext";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom"; 
 
 function AddProduct() {
+  const { user, loading } = useContext(UserContext); 
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [group, setGroup] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
+  const [stock, setStock] = useState(''); 
+  const [price, setPrice] = useState('');
+  const fileInputRef = useRef(null); 
+  const navigate = useNavigate(); 
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
@@ -15,6 +22,8 @@ function AddProduct() {
     formData.append("name", name);
     formData.append("group", group);
     formData.append("description", description);
+    formData.append("stock", stock);
+    formData.append("price", price);
     if (image) formData.append("image", image);
 
     try {
@@ -24,7 +33,6 @@ function AddProduct() {
         credentials: "include",
       });
 
-      const data = await res.json();
       if (res.ok) {
         alert("เพิ่มสินค้าเรียบร้อย!");
         setId("");
@@ -32,15 +40,31 @@ function AddProduct() {
         setGroup("");
         setDescription("");
         setImage(null);
+        setStock(''); 
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null; 
+        }
+        navigate("/product"); 
       } else {
-        alert("เกิดข้อผิดพลาด: " + data.msg);
+        const data = await res.json();
+        alert("เกิดข้อผิดพลาด: " + (data.message || "Unknown error"));
       }
     } catch (err) {
       console.error(err);
-      alert("เกิดข้อผิดพลาด: " + err.message);
+      alert("เกิดข้อผิดพลาดในการเชื่อมต่อ: " + err.message);
     }
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  } else if (user.role !== 'admin') {
+    return <div>ไม่มีสิทธิเข้าถึง</div>
+  }
+  
   return (
     <div className="container mt-5" style={{ maxWidth: "500px" }}>
       <h2>Add Product</h2>
@@ -48,7 +72,7 @@ function AddProduct() {
         <div className="mb-3">
           <label htmlFor="id" className="form-label">ID</label>
           <input
-            type="number"
+            type="text"
             id="id"
             className="form-control"
             value={id}
@@ -96,7 +120,34 @@ function AddProduct() {
             type="file"
             id="image"
             className="form-control"
+            ref={fileInputRef} 
             onChange={(e) => setImage(e.target.files[0])}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="stock" className="form-label">Stock</label>
+          <input
+            type="number"
+            id="stock"
+            className="form-control"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+            required
+            min="0"
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="stock" className="form-label">Price</label>
+          <input
+            type="number"
+            id="price"
+            className="form-control"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+            min="0"
           />
         </div>
 

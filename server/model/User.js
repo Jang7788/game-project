@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   email: { type: String, unique: true },
   password: String,
+  role : {type : String, default : "user"}
 });
 
 const User = userConn.model("User",userSchema);

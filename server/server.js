@@ -1,12 +1,8 @@
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
-const Login = require("./Routes/login.js");
-const logout = require("./Routes/logout.js");
-const addproduct = require("./Routes/addproduct.js")
-const register = require("./Routes/register.js");
-const me = require("./Routes/me.js")
-const MongoStore = require("connect-mongo"); // สำหรับเก็บ session ลง MongoDB
+const MongoStore = require("connect-mongo"); 
+const fs = require("fs");
 const PORT = 3600;
 
 const app = express();
@@ -25,25 +21,22 @@ app.use(
     store: MongoStore.create({ mongoUrl: "mongodb://127.0.0.1:27017/auth_demo" }),
     cookie: {
       httpOnly: true,
-      secure: false, // true ถ้าใช้ HTTPS
+      secure: false,
       maxAge: 1000 * 60 * 60 * 3,
     },
   })
 );
 
-//Add product
-app.use("/api/addproduct",addproduct);
-
-//Regiser
-app.use("/api/register",register);
-
-//Login
-app.use("/api/login",Login);
-
-//Me
-app.use("/api/me",me);
-
-//Logout
-app.use("/api/logout",logout);
+fs.readdirSync('./Routes')
+  .filter(fileName => fileName.endsWith('.js')) 
+  .forEach(fileName => {
+    try {
+      const route = require('./Routes/' + fileName);
+      console.log(`Loading Route: ${fileName}`); 
+      app.use('/api', route);
+    } catch (err) {
+      console.error(`Error loading route ${fileName}:`, err);
+    }
+  });
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

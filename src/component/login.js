@@ -1,15 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../UserContext"; // ✅ import
+import { UserContext } from "./UserContext";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext); // ✅ ใช้ context
-
+  const { setUser } = useContext(UserContext);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -17,13 +16,13 @@ function Login() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password}),
       });
 
       const data = await res.json();
 
       if (res.ok && data.user) {
-        setUser(data.user); // ✅ อัปเดต Navbar ทันที
+        setUser(data.user); 
         setMessage(`✅ เข้าสู่ระบบสำเร็จ! สวัสดีคุณ ${data.user.username}`);
         navigate("/profile");
       } else {
@@ -31,6 +30,7 @@ function Login() {
       }
     } catch (err) {
       setMessage(`เกิดข้อผิดพลาด: ${err.message}`);
+      console.log(err);
     }
   };
 
