@@ -7,7 +7,7 @@ function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:3600/api/me", {
+    fetch("http://localhost:3600/api/auth/me", {
       credentials: "include",
     })
       .then(res => res.json())

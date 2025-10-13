@@ -1,13 +1,14 @@
 import { Link, useNavigate} from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
+import { FaShoppingCart } from "react-icons/fa";
 
 function Nav() {
   const { user, setUser, loading } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await fetch("http://localhost:3600/api/logout", {
+    await fetch("http://localhost:3600/api/auth/logout", {
       method: "POST",
       credentials: "include",
     });
@@ -29,6 +30,7 @@ function Nav() {
           </>
         ) : (
           <>
+            <span><Link to="/cart" ><FaShoppingCart /></Link></span>
             <span className="mx-2">Hi, {user.username}</span>
             <button className="btn btn-outline-danger mx-1" onClick={handleLogout}>Logout</button>
           </>

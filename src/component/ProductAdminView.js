@@ -9,7 +9,7 @@ function ProductAdminView() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:3600/api/allproduct");
+                const response = await fetch("http://localhost:3600/api/products/allproduct");
                 const productList = await response.json();
                 setProducts(productList);
             } catch (err) {
@@ -35,7 +35,7 @@ function ProductAdminView() {
         }
         
         try {
-            const response = await fetch(`http://localhost:3600/api/deleteproduct/${id}`, {
+            const response = await fetch(`http://localhost:3600/api/products/deleteproduct/${id}`, {
                 method: 'DELETE'
             });
 

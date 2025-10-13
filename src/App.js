@@ -8,6 +8,8 @@ import Profile from "./component/Profile";
 import Product from './component/ProductPage';
 import AddProduct from './component/Addproduct';
 import Editproduct from './component/Editproduct';
+import Cart from './component/Cart';
+import ProductDetailPage from "./component/Getproduct";
 import { UserProvider } from "./component/UserContext";
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path='/addproduct' element={<AddProduct />}/>
           <Route path='/editproduct/:id' element={<Editproduct />}></Route>
+          <Route path='/cart' element={<Cart/>}></Route>
+          <Route path='/getproduct/:id' element={<ProductDetailPage/>}></Route>
         </Routes>
       </Router>
     </UserProvider>

@@ -8,7 +8,7 @@ function ProductUserView() {
     useEffect(() => {
         const fetchdata = async () => {
             try {
-                const response = await fetch("http://localhost:3600/api/allproduct");
+                const response = await fetch("http://localhost:3600/api/products/allproduct");
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -60,9 +60,10 @@ function ProductUserView() {
                                     </p>
                                 )}
                                 
-                                <Link to={`/product/${product.id || product._id}`} className="btn btn-primary mt-auto">
+                                <Link to={`/getproduct/${product.id || product._id}`} className="btn btn-primary mt-auto">
                                     ดูรายละเอียด
                                 </Link>
+                                <Link to={''} ></Link>
                             </div>
                         </div>
                     </div>

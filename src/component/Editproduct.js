@@ -17,7 +17,7 @@ function Editproduct() {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await fetch(`http://localhost:3600/api/getproduct/${id}`);
+                const response = await fetch(`http://localhost:3600/api/products/editproduct/${id}`);
                 
                 if (!response.ok) {
                     throw new Error("Product not found");
@@ -95,7 +95,6 @@ function Editproduct() {
                     <input type="text" id="group" name="group" className="form-control" value={productData.group} onChange={handleChange} />
                 </div>
                 
-                {/* ✅ 1. แก้ไข input ของ description */}
                 <div className="mb-3">
                     <label htmlFor="description" className="form-label">Description</label>
                     <textarea 
@@ -107,13 +106,11 @@ function Editproduct() {
                     />
                 </div>
 
-                {/* ✅ 2. แก้ไข input ของ stock */}
                 <div className="mb-3">
                     <label htmlFor="stock" className="form-label">Stock</label>
                     <input type="number" id="stock" name="stock" className="form-control" value={productData.stock} onChange={handleChange} />
                 </div>
                 
-                {/* ✅ 3. แก้ไข input ของ price */}
                 <div className="mb-3">
                     <label htmlFor="price" className="form-label">Price</label>
                     <input type="number" id="price" name="price" className="form-control" value={productData.price} onChange={handleChange} />

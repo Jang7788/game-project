@@ -27,7 +27,7 @@ function AddProduct() {
     if (image) formData.append("image", image);
 
     try {
-      const res = await fetch("http://localhost:3600/api/addproduct", {
+      const res = await fetch("http://localhost:3600/api/products/addproduct", {
         method: "POST",
         body: formData,
         credentials: "include",
