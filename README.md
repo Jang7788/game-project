@@ -73,3 +73,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 user : netbum21_db_user
 password : 3RmZzKbOhMOuZqFR
 ip : 49.228.243.62/32
+
+
+### Admin username password for test
+username : admin
+password : 1234
+role is admin
