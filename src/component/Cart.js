@@ -15,6 +15,7 @@ function Cart() {
 
             if (response.status === 401) {
                 navigate('/login');
+                console.log("ไป login")
                 return;
             }
             if (!response.ok) {
@@ -120,7 +121,7 @@ function Cart() {
             ) : (
                 <div className="text-center py-5">
                     <p className="fs-4">ไม่มีสินค้าในตะกร้าของคุณ</p>
-                    <Link to="/products" className="btn btn-primary">เลือกซื้อสินค้าต่อ</Link>
+                    <Link to="/product" className="btn btn-primary">เลือกซื้อสินค้าต่อ</Link>
                 </div>
             )}
         </div>

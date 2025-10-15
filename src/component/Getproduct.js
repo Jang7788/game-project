@@ -1,21 +1,19 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { UserContext } from "./UserContext"; // Import UserContext
+import { UserContext } from "./UserContext";
 
 function ProductDetailPage() {
-    // 1. เปลี่ยน State เริ่มต้นเป็น null เพราะคาดหวัง Object แค่ชิ้นเดียว
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [quantity, setQuantity] = useState(1); // State สำหรับจำนวนสินค้าที่จะเพิ่ม
+    const [quantity, setQuantity] = useState(1); 
     
-    // 2. ใช้ useParams() เพื่อดึง id ออกมาจาก URL
     const { id } = useParams();
-    const { user } = useContext(UserContext); // ดึงข้อมูล user มาจาก Context
+    const { user } = useContext(UserContext); 
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProduct = async () => {
-            if (!id) return; // ถ้าไม่มี id ใน URL ก็ไม่ต้องทำอะไร
+            if (!id) return;
             try {
                 const response = await fetch(`http://localhost:3600/api/products/getproduct/${id}`);
                 if (!response.ok) {
@@ -26,14 +24,14 @@ function ProductDetailPage() {
             } catch (err) {
                 console.log(err);
                 alert(err.message);
-                navigate('/products'); // ถ้าหาไม่เจอ ให้กลับไปหน้าหลัก
+                navigate('/products'); 
             } finally {
                 setLoading(false);
             }
         };
 
         fetchProduct();
-    }, [id, navigate]); // ให้ Effect นี้ทำงานใหม่ทุกครั้งที่ id ใน URL เปลี่ยน
+    }, [id, navigate]); 
 
     const handleAddToCart = async () => {
         if (!user) {
@@ -52,7 +50,7 @@ function ProductDetailPage() {
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({
-                    productId: product._id, // ส่ง _id ของ MongoDB
+                    productId: product._id,
                     quantity: quantity
                 })
             });
@@ -71,12 +69,10 @@ function ProductDetailPage() {
         return <div className="container text-center p-5"><h4>กำลังโหลดข้อมูลสินค้า...</h4></div>;
     }
 
-    // 3. ถ้าหา product ไม่เจอ (เป็น null) ให้แสดงข้อความ
     if (!product) {
         return <div className="container text-center p-5"><h4>ไม่พบสินค้า</h4></div>;
     }
 
-    // 4. แสดงผลข้อมูลจาก Object โดยตรง ไม่ต้อง .map()
     return (
         <div className="container my-5">
             <div className="row">

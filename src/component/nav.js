@@ -2,6 +2,7 @@ import { Link, useNavigate} from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { FaShoppingCart } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
 
 function Nav() {
   const { user, setUser, loading } = useContext(UserContext);
@@ -31,7 +32,7 @@ function Nav() {
         ) : (
           <>
             <span><Link to="/cart" ><FaShoppingCart /></Link></span>
-            <span className="mx-2">Hi, {user.username}</span>
+            <span className="mx-2"><Link to="profile"><CgProfile /></Link></span>
             <button className="btn btn-outline-danger mx-1" onClick={handleLogout}>Logout</button>
           </>
         )}

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../model/User"); 
+const jwt = require('jsonwebtoken');
 
 router.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
@@ -10,29 +11,32 @@ router.post("/register", async (req, res) => {
     }
 
     try {
-        const existingUser = await User.findOne({ $or: [{ username: username }, { email: email }] });
+        const existingUser = await User.findOne({ email: email });
         if (existingUser) {
-            return res.status(409).json({ message: "Username หรือ Email นี้มีผู้ใช้งานแล้ว" });
+            return res.status(409).json({ message: "อีเมลนี้มีผู้ใช้งานแล้ว" });
         }
-
-        const salt = await bcrypt.genSalt(10); 
-        const hashedPassword = await bcrypt.hash(password, salt); 
-
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
         const newUser = new User({
-            username: username,
-            email: email,
-            password: hashedPassword, 
-            role: 'user' 
+            username,
+            email,
+            password: hashedPassword,
         });
-
         const savedUser = await newUser.save();
-        res.status(201).json({ 
-            message: "ลงทะเบียนสำเร็จ!",
+        const payload = {
+            user: {
+                id: savedUser.id
+            }
+        };
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.status(201).json({
+            message: "ลงทะเบียนและเข้าสู่ระบบสำเร็จ!",
+            token: token,
             user: {
                 _id: savedUser._id,
                 username: savedUser.username,
                 email: savedUser.email,
-                role: savedUser.role
             }
         });
 

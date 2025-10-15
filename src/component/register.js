@@ -11,36 +11,37 @@ function Register() {
   const { setUser } = useContext(UserContext); 
   const navigate = useNavigate(); 
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
 
     try {
-      const res = await fetch("http://localhost:3600/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", 
-        body: JSON.stringify({ username, email, password }),
-      });
+        const res = await fetch("http://localhost:3600/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (res.ok && data.username) {
-        setMessage(`✅ สมัครสำเร็จ! สวัสดีคุณ ${data.username}`);
+        if (res.ok && data.token && data.user) {
 
-        setUser({ username: data.username, email });
+            localStorage.setItem('token', data.token);
 
-        navigate("/profile");
+            setUser(data.user);
 
-        setUsername("");
-        setPassword("");
-        setEmail("");
-      } else {
-        setMessage(`❌ ล้มเหลว: ${data.msg || data.error}`);
-      }
+            setMessage(`✅ สมัครสำเร็จ! สวัสดีคุณ ${data.user.username}`);
+
+            navigate("/profile");
+
+        } else {
+            setMessage(`❌ ล้มเหลว: ${data.message || 'เกิดข้อผิดพลาดไม่ทราบสาเหตุ'}`);
+        }
     } catch (err) {
-      setMessage(`เกิดข้อผิดพลาด: ${err.message}`);
+        setMessage(`เกิดข้อผิดพลาดในการเชื่อมต่อ: ${err.message}`);
     }
-  };
+};
+
 
   return (
     <div className="container mt-5" style={{ maxWidth: "400px" }}>

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
@@ -23,7 +24,7 @@ app.use(
     secret: "sskibidi_toilet_1234_secret_keyfdsffgh21fgh21h2fg1",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: "mongodb://127.0.0.1:27017/auth_demo" }),
+    store: MongoStore.create({ mongoUrl: "mongodb+srv://netbum21_db_user:3RmZzKbOhMOuZqFR@cluster0.v924yzi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" }),
     cookie: {
       httpOnly: true,
       secure: false, 

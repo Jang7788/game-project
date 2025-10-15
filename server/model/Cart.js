@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const ProductConn = mongoose.createConnection("mongodb://127.0.0.1:27017/Productdb");
+const ProductConn = mongoose.createConnection("mongodb+srv://netbum21_db_user:3RmZzKbOhMOuZqFR@cluster0.v924yzi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/carts");
 
 const cartItemSchema = new mongoose.Schema({
     productId: {

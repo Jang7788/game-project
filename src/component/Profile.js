@@ -1,37 +1,46 @@
+// Profile.js
+
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "./UserContext"; // ✅ import
+import { UserContext } from "./UserContext";
 
 function Profile() {
-  const { user, setUser } = useContext(UserContext);
+  // 1. ดึง 'user' และ 'loading' มาจาก Context
+  const { user, setUser, loading } = useContext(UserContext);
   const navigate = useNavigate();
 
+  // 2. ใช้ useEffect เพื่อ "React" ต่อการเปลี่ยนแปลงของ user และ loading
   useEffect(() => {
-    fetch("http://localhost:3600/api/auth/me", {
-      credentials: "include",
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.loggedIn) {
-          setUser(data.user);
-        } else {
-          navigate("/login");
-        }
-      })
-      .catch(() => navigate("/login"));
-  }, [navigate, setUser]);
+    // ถ้าการโหลดข้อมูลเริ่มต้นเสร็จแล้ว (loading === false)
+    // และยังไม่มีข้อมูล user อยู่ใน Context
+    // ให้เด้งไปหน้า login
+    if (!loading && !user) {
+      navigate("/login");
+    }
+  }, [user, loading, navigate]); // <-- ให้ effect นี้ทำงานเมื่อค่าเหล่านี้เปลี่ยน
 
-  if (!user) return <p>Loading...</p>;
+  // 3. ขณะที่ UserProvider กำลังตรวจสอบ session ให้แสดง Loading...
+  // นี่คือส่วนสำคัญที่ทำให้มัน "รอ"
+  if (loading) {
+    return <p>Loading user data...</p>;
+  }
+  
+  // 4. ถ้าโหลดเสร็จแล้วแต่ยังไม่มี user (เผื่อไว้) ก็ไม่ต้องแสดงอะไร
+  if (!user) {
+      return null; // หรือกลับไปหน้า Login ก็ได้
+  }
 
   const handleLogout = async () => {
-    await fetch("http://localhost:3600/api/logout", {
+    // โค้ดส่วน Logout เหมือนเดิม
+    await fetch("http://localhost:3600/api/auth/logout", {
       method: "POST",
       credentials: "include",
     });
-    setUser(null); // ✅ Navbar เปลี่ยนทันที
+    setUser(null);
     navigate("/login");
   };
 
+  // ถ้าทุกอย่างผ่าน จะแสดงข้อมูลโปรไฟล์
   return (
     <div className="container mt-5">
       <h2>โปรไฟล์</h2>

@@ -17,7 +17,7 @@ function Editproduct() {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await fetch(`http://localhost:3600/api/products/editproduct/${id}`);
+                const response = await fetch(`http://localhost:3600/api/products/getproduct/${id}`);
                 
                 if (!response.ok) {
                     throw new Error("Product not found");
@@ -57,7 +57,7 @@ function Editproduct() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:3600/api/editproduct/${id}`, {
+            const response = await fetch(`http://localhost:3600/api/products/editproduct/`+id, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

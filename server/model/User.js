@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { type } = require('@testing-library/user-event/dist/type');
 
-const userConn = mongoose.createConnection("mongodb://127.0.0.1:27017/auth_demo");
+const userConn = mongoose.createConnection("mongodb+srv://netbum21_db_user:3RmZzKbOhMOuZqFR@cluster0.v924yzi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/users");
 
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },

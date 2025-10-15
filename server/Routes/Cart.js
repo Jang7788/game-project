@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Cart = require("../model/Cart");
 const { Product } = require("../model/Product");
+const mongoose = require("mongoose");
 
 const checkAuth = (req, res, next) => {
     if (!req.session.user || !req.session.user._id) {
@@ -15,18 +16,44 @@ router.use(checkAuth);
 router.get("/allcart", async (req, res) => {
     try {
         const userId = req.session.user._id;
-        const userCart = await Cart.findOne({ userId: userId })
-            .populate({
-                path: 'items.productId',
-                model: Product,
-                select: 'name price image stock'
-            });
 
-        if (!userCart) {
+        const userCart = await Cart.aggregate([
+            { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+            { $unwind: "$items" },
+            {
+                $lookup: {
+                    from: "products", 
+                    localField: "items.productId",
+                    foreignField: "_id",
+                    as: "items.productDetails"
+                }
+            },
+
+            { $match: { "items.productDetails": { $ne: [] } } },
+            
+            {
+                $group: {
+                    _id: "$_id",
+                    userId: { $first: "$userId" },
+                    items: {
+                        $push: {
+                           _id: "$items._id",
+                           quantity: "$items.quantity",
+                           productId: { $arrayElemAt: ["$items.productDetails", 0] }
+                        }
+                    },
+                    createdAt: { $first: "$createdAt" },
+                    updatedAt: { $first: "$updatedAt" }
+                }
+            }
+        ]);
+
+        if (!userCart || userCart.length === 0) {
             return res.json({ items: [] });
         }
-        res.json(userCart);
+        res.json(userCart[0]);
     } catch (err) {
+        console.error("Get Cart Error:", err);
         res.status(500).json({ message: "เกิดข้อผิดพลาดในเซิร์ฟเวอร์" });
     }
 });
