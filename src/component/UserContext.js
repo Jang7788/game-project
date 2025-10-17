@@ -7,7 +7,7 @@ export function UserProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3600/api/auth/me", { credentials: "include" })
+    fetch("https://server-qobj.onrender.com/api/auth/me", { credentials: "include" })
       .then(res => res.json())
       .then(data => {
         if (data.loggedIn) setUser(data.user);

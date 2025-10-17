@@ -35,7 +35,7 @@ function ProductAdminView() {
         }
         
         try {
-            const response = await fetch(`http://localhost:3600/api/products/deleteproduct/${id}`, {
+            const response = await fetch(`https://server-qobj.onrender.com/api/products/deleteproduct/${id}`, {
                 method: 'DELETE'
             });
 

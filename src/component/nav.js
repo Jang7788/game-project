@@ -9,7 +9,7 @@ function Nav() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await fetch("http://localhost:3600/api/auth/logout", {
+    await fetch("https://server-qobj.onrender.com/api/auth/logout", {
       method: "POST",
       credentials: "include",
     });

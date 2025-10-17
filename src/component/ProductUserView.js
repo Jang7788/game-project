@@ -8,7 +8,7 @@ function ProductUserView() {
     useEffect(() => {
         const fetchdata = async () => {
             try {
-                const response = await fetch("http://localhost:3600/api/products/allproduct");
+                const response = await fetch("https://server-qobj.onrender.com/api/products/allproduct");
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

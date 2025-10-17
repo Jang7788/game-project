@@ -15,7 +15,7 @@ function ProductDetailPage() {
         const fetchProduct = async () => {
             if (!id) return;
             try {
-                const response = await fetch(`http://localhost:3600/api/products/getproduct/${id}`);
+                const response = await fetch(`https://server-qobj.onrender.com/api/products/getproduct/${id}`);
                 if (!response.ok) {
                     throw new Error('Product not found');
                 }
@@ -45,7 +45,7 @@ function ProductDetailPage() {
         }
 
         try {
-            const response = await fetch('http://localhost:3600/api/cart/addcart', {
+            const response = await fetch('https://server-qobj.onrender.com/api/cart/addcart', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

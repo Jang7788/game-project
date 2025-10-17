@@ -9,7 +9,7 @@ function Cart() {
 
     const fetchCart = useCallback(async () => {
         try {
-            const response = await fetch("http://localhost:3600/api/cart/allcart", {
+            const response = await fetch("https://server-qobj.onrender.com/api/cart/allcart", {
                 credentials: 'include' 
             });
 
